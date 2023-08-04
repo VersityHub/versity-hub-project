@@ -1,39 +1,66 @@
 package com.java.tech.versityHub.entity;
 
-import lombok.Data;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "USER_TABLE")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 public class UserEntity {
 
-    @javax.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private Long Id;
-    @Column(nullable = false)
-    private String FirstName;
-    private String MiddleName;
-    @Column(nullable = false)
-    private String LastName;
-    @Column(nullable = false)
-    private String Email;
-    @Column(nullable = false)
-    private int PhoneNumber;
-    private String Gender;
-    @Column(nullable = false)
-    private String Country;
-    @Column(nullable = false)
-    private String State;
-    @Column(nullable = false)
-    private String University;
-    @Column(nullable = false)
-    private String UniversityId;
-    @Column(nullable = false)
-    private String DateOfBirth;
-    @Column(nullable = false)
-    private String Password;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    private String firstName;
+    private String middleName;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    private String lastName;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    @Email(message = "Invalid Emial format")
+    private String email;
+    @NotNull(groups = {LoginValidation.class, CreateAccountValidation.class}, message = "required")
+    @NotEmpty(groups = {LoginValidation.class, CreateAccountValidation.class}, message = "field cannot be empty")
+    @Pattern(regexp = "\\+234\\d{10}", message = "Invalid Phone number ")
+    private String phoneNumber;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    @Pattern(regexp = "^(male|female)$", message = "Invalid gender")
+    private String gender;
+    private String country;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    private String state;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    private String university;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    private String universityId;
+    @NotNull(groups = CreateAccountValidation.class, message = "required")
+    @NotEmpty(groups = CreateAccountValidation.class, message = "field cannot be empty")
+    @Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}", message = "wrong DOB format: eg 31-07-2023")
+    private String dateOfBirth;
+    @NotNull(groups = {LoginValidation.class, CreateAccountValidation.class}, message = "required")
+    @NotEmpty(groups = {LoginValidation.class, CreateAccountValidation.class}, message = "field cannot be empty")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).{8,15}$",
+            message = "Password requires min of 8 to max or 15 characters with at least one digit & uppercase letter")
+    private String password;
+
+    public interface CreateAccountValidation{}
+    public interface LoginValidation{}
 }
